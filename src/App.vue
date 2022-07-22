@@ -1,9 +1,11 @@
 <template>
-  <div class="container">
+  <div>
     <nav>
       <router-link to="/">Home</router-link>
     </nav>
-    <router-view/>
+    <div class="container">
+      <router-view/>
+    </div>
   </div>
 </template>
 
@@ -36,6 +38,8 @@ margin: 0 auto;
 nav {
   padding: 30px 50px 30px 0px;
   text-align: right;
+  background-color: #191997;
+  margin-bottom: 20px;
   a {
     font-weight: bold;
     color: white;
