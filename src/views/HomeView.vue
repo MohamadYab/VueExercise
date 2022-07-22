@@ -3,25 +3,26 @@
     <div class="header">
       <form class="search-form">
         <label for="search" >
-          <input type="text" id="search" v-model="search" class="rounded"
+          <input type="text" id="search" v-model="search"
+          v-bind:class="{error: errors.message !== '', rounded: true, search: true}"
           placeholder="Search For A movie by name" />
         </label>
         <button v-on:click.prevent="searchMovies" class="rounded" >Search</button>
       </form>
     </div>
-    <div v-if="errors.message" class="erorrs">
+    <div v-if="errors.message" class="errors">
       {{errors.message}}
     </div>
-    <div class="results">
-      <div v-if="length >= 0">
+    <div>
+      <div v-if="errors.message == '' && length == 0">
+        Sorry We couldn't find any movie with this title...
+      </div>
+      <div v-if="length >= 0" class="results">
         <MovieCard
           v-for="movie in getResults()"
           v-bind:key="movie.imdbID"
           v-bind:movie="movie"
           v-on:click="goToMovie(movie.imdbID)" />
-      </div>
-      <div v-else-if="errors.message === '' && !length >= 0">
-        Sorry We couldn't find any movie with this title...
       </div>
     </div>
   </div>
@@ -103,7 +104,13 @@ $accent: #ECEC13;
   #search {
     width: 70%;
     padding: 8px;
+  }
+
+  .search {
     border: none;
+  }
+  .error {
+    border: 2px red solid;
   }
 
   button {
@@ -114,6 +121,10 @@ $accent: #ECEC13;
     margin-left: 10%;
     cursor: pointer;
   }
+}
+
+.errors {
+  border-bottom: 1px red solid;
 }
 
 .results {
@@ -128,6 +139,14 @@ $accent: #ECEC13;
   /* Hide scrollbar for IE, Edge and Firefox */
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  * {
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
 }
 // @media (min-width:320px) {}
 </style>
