@@ -35,6 +35,10 @@ const results = {
           console.log(errors);
         });
     },
+    // Reset the search result...
+    resetResults: (context) => {
+      context.commit('setResults', []);
+    },
   },
 };
 export default results;

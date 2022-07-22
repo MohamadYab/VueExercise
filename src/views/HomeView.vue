@@ -7,14 +7,20 @@
         </label>
         <button v-on:click.prevent="searchMovies" >Search</button>
       </form>
+      <div v-if="errors.message" class="erorrs">
+        {{errors.message}}
+      </div>
     </div>
     <div>
-      <div v-if="getResults().length > 0">
+      <div v-if="length >= 0">
         <MovieCard
           v-for="movie in getResults()"
           v-bind:key="movie.imdbID"
           v-bind:movie="movie"
           v-on:click="goToMovie(movie.imdbID)" />
+      </div>
+      <div v-else-if="!errors.message === '' && !length > 0">
+        Sorry We couldn't find any movie with this title...
       </div>
     </div>
   </div>
@@ -29,6 +35,10 @@ export default {
   data() {
     return {
       search: '',
+      length: 0,
+      errors: {
+        message: '',
+      },
     };
   },
   components: {
@@ -36,12 +46,22 @@ export default {
   },
   methods: {
     searchMovies() {
+      // Empty the error message...
+      this.errors.message = '';
       // When Search is clicked, Validate the search input...
+      // Check if it has any value.
+      if (this.search === '') {
+        // Reset the results...
+        this.$store.dispatch('resetResults');
+        this.errors.message = 'You must enter something in the search bar to start searching';
+        return;
+      }
+      // Trim multiple spaces with a single space and trim space around the value...
+      this.search = this.search.replace(/\s+/g, ' ').trim();
+      // Replace Space with "+" That's how it was on omdb page...
+      const encodedSearch = this.search.replace(' ', '+');
       // If it passes validation, Query the search by dispatching it...
-      this.$store.dispatch('searchMovies', this.search);
-      // I need to get data from the getters...
-      // I need to loop through this data inside the card view...
-      // Because I think I need to loop through the data, I need to use computed???
+      this.$store.dispatch('searchMovies', encodedSearch);
     },
 
     goToMovie(id) {
@@ -51,7 +71,15 @@ export default {
       this.$router.push({ name: 'movie', query: { i: id } });
     },
     getResults() {
-      return this.$store.getters.getResults;
+      const result = this.$store.getters.getResults;
+      // If data is not present...
+      if (result === undefined) {
+        this.length = 0;
+        return result;
+      }
+      this.length = 1;
+      // Return the search result...
+      return result;
     },
   },
 };
