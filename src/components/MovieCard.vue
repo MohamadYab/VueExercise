@@ -30,7 +30,11 @@ export default {
   cursor: pointer;
   overflow: hidden;
   padding: 10px;
+  transition: transform ease-in-out .5s;
 
+  &:hover {
+    transform: scale(1.035);
+  }
   .card-image {
     width: 100%;
     height: 70%;

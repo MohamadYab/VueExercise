@@ -129,8 +129,6 @@ $accent: #ECEC13;
 
 .results {
   height: 80vh;
-  overflow-x: hidden;
-  overflow-y: scroll;
 
   /* Hide scrollbar for Chrome, Safari and Opera */
   &::-webkit-scrollbar {
