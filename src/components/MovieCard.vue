@@ -1,6 +1,6 @@
 <template>
   <div>
-    Fuck You Vue JS and your Fucking Errors!!!
+    {{movie}}
   </div>
 </template>
 
@@ -8,6 +8,7 @@
 // import ;
 export default {
   name: 'MovieCard',
+  props: ['movie'],
 };
 </script>
 

@@ -9,9 +9,14 @@
       </form>
     </div>
     <div>
-
+      <div v-if="getResults().length > 0">
+        <MovieCard
+          v-for="movie in getResults()"
+          v-bind:key="movie.imdbID"
+          v-bind:movie="movie"
+          v-on:click="goToMovie(movie.imdbID)" />
+      </div>
     </div>
-    <MovieCard />
   </div>
 </template>
 
@@ -35,15 +40,20 @@ export default {
       // If it passes validation, Query the search by dispatching it...
       this.$store.dispatch('searchMovies', this.search);
       // I need to get data from the getters...
-      // I need to loop through this data inside the card view.
+      // I need to loop through this data inside the card view...
+      // Because I think I need to loop through the data, I need to use computed???
     },
 
-    goToMovie: () => {
+    goToMovie(id) {
+      // Trigger the dispatch on card click...
+      this.$store.dispatch('loadMovie', id);
       // I think this needs to be inside the computed property...
-      // TODO: This function must be inside the MovieCard Componenet...
       // Get the value of the input using the v-model...
       // Dispatch loadMovie with that value...
       // Navigate to the movie view...
+    },
+    getResults() {
+      return this.$store.getters.getResults;
     },
   },
 };
