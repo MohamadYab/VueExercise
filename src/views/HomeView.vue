@@ -1,17 +1,18 @@
 <template>
   <div class="home">
     <div class="header">
-      <form>
+      <form class="search-form">
         <label for="search" >
-          <input type="text" id="search" v-model="search" />
+          <input type="text" id="search" v-model="search" class="rounded"
+          placeholder="Search For A movie by name" />
         </label>
-        <button v-on:click.prevent="searchMovies" >Search</button>
+        <button v-on:click.prevent="searchMovies" class="rounded" >Search</button>
       </form>
-      <div v-if="errors.message" class="erorrs">
-        {{errors.message}}
-      </div>
     </div>
-    <div>
+    <div v-if="errors.message" class="erorrs">
+      {{errors.message}}
+    </div>
+    <div class="results">
       <div v-if="length >= 0">
         <MovieCard
           v-for="movie in getResults()"
@@ -19,7 +20,7 @@
           v-bind:movie="movie"
           v-on:click="goToMovie(movie.imdbID)" />
       </div>
-      <div v-else-if="!errors.message === '' && !length > 0">
+      <div v-else-if="errors.message === '' && !length >= 0">
         Sorry We couldn't find any movie with this title...
       </div>
     </div>
@@ -43,6 +44,10 @@ export default {
   },
   components: {
     MovieCard,
+  },
+  created() {
+    // Reset the results...
+    this.$store.dispatch('resetResults');
   },
   methods: {
     searchMovies() {
@@ -84,3 +89,45 @@ export default {
   },
 };
 </script>
+
+<style scoped lang="scss">
+// Variables...
+$primary: #05052E;
+$accent: #ECEC13;
+
+.header {
+  margin: 0 auto 40px auto;
+}
+
+.search-form {
+  #search {
+    width: 70%;
+    padding: 8px;
+    border: none;
+  }
+
+  button {
+    width: 20%;
+    background-color: $accent;
+    border: none;
+    padding: 8px;
+    margin-left: 10%;
+    cursor: pointer;
+  }
+}
+
+.results {
+  height: 80vh;
+  overflow-x: hidden;
+  overflow-y: scroll;
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+// @media (min-width:320px) {}
+</style>
